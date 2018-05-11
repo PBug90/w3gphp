@@ -18,7 +18,6 @@ class ReplayParserTest extends TestCase
           $files[] = [__DIR__ . "/replays/".$file];
         }
           // parse your data file however you want
-          $this->assertTrue(true);
           return  $files;
       }
 
