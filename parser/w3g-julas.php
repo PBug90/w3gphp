@@ -187,7 +187,9 @@ class replay
             $this->data = substr($this->data, 8);
             $this->players[$player_id]['exe_runtime'] = $temp['runtime'];
             $this->players[$player_id]['race'] = convert_race($temp['race']);
-        }
+        } else if (ord($this->data{0}) == 2) { // necessary since netease 1.29.1
+			$this->data = substr($this->data, 3);
+		}
         if ($this->parse_actions) {
             $this->players[$player_id]['actions'] = 0;
         }
