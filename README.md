@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/anXieTyPB/w3gphp.svg?branch=master)](https://travis-ci.org/anXieTyPB/w3gphp)
+[![Build Status](https://travis-ci.org/PBug90/w3gphp.svg?branch=master)](https://travis-ci.org/PBug90/w3gphp)
 # Warcraft III Replay Parser
 
 Based on the W3G-Parser for PHP created by Julas: http://w3rep.sourceforge.net/

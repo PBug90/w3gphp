@@ -1,5 +1,5 @@
 {
-    "name": "anxietypb/w3gphp",
+    "name": "PBug90/w3gphp",
     "type": "library",
     "require": {
         "phpunit/phpunit": "^6.2"
