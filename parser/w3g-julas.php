@@ -131,7 +131,7 @@ class replay
         $blocks_count = $this->header['blocks'];
         for ($i=0; $i<$blocks_count; $i++) {
             // 3.0 [Data block header]
-            $block_header = @unpack('vc_size/vu_size/Vchecksum', fread($this->fp, 8));
+            $block_header = @unpack('vc_size/vu_unknown/vu_size/Vchecksum/vu_unknown2', fread($this->fp, 12));
             $temp = fread($this->fp, $block_header['c_size']);
             $temp = substr($temp, 2, -4);
             // the first bit must be always set, but already set in replays with modified chatlog (why?)
@@ -178,7 +178,6 @@ class replay
         }
         $this->data = substr($this->data, $i+1);
 
-
         if (ord($this->data{0}) == 1) { // custom game
             $this->data = substr($this->data, 2);
         } elseif (ord($this->data{0}) == 8) { // ladder game
@@ -189,7 +188,9 @@ class replay
             $this->players[$player_id]['race'] = convert_race($temp['race']);
         } else if (ord($this->data{0}) == 2) { // necessary since netease 1.29.1
 			$this->data = substr($this->data, 3);
-		}
+		} else if (ord($this->data{0}) == 0){
+            $this->data = substr($this->data,1);
+        }
         if ($this->parse_actions) {
             $this->players[$player_id]['actions'] = 0;
         }
@@ -207,7 +208,7 @@ class replay
             $this->game['name'] .= $this->data{$i};
         }
         $this->data = substr($this->data, $i+2); // 0-byte ending the string + 1 unknown byte
-
+ 
         // 4.3 [Encoded String]
         $temp = '';
 
@@ -245,7 +246,6 @@ class replay
         }
 
         $temp = substr($temp, 13); // 5 unknown bytes + checksum
-
         // 4.5 [Map&CreatorName]
         $temp = explode(chr(0), $temp);
         $this->game['creator'] = $temp[1];
@@ -255,7 +255,6 @@ class replay
         $temp = unpack('Vslots', $this->data);
         $this->data = substr($this->data, 4);
         $this->game['slots'] = $temp['slots'];
-
         // 4.7 [GameType]
         $this->game['type'] = convert_game_type(ord($this->data[0]));
         $this->game['private'] = convert_bool(ord($this->data[1]));
@@ -267,13 +266,33 @@ class replay
             $this->loadplayer();
             $this->data = substr($this->data, 4);
         }
+  
+        $this->data = substr($this->data, 12); 
+        // 4.9 [extra player list]
+        do{
+            $this->data = substr($this->data, 5); 
+            $temp = unpack('cname_length', $this->data);
+            $this->data = substr($this->data,1);
+            
+            $this->data = substr($this->data, $temp["name_length"]+1);
+            
+            $temp = unpack('cclan_length', $this->data);
+            $this->data = substr($this->data,1);
+            
+            $this->data = substr($this->data, $temp["clan_length"]+1);
 
+            $temp = unpack('cextra_length', $this->data);
+            $this->data = substr($this->data,$temp['extra_length']+1);
+            $this->data = substr($this->data,4);
+            
+        }while (ord($this->data{0}) != 0x19);
+
+      
         // 4.10 [GameStartRecord]
         $temp = unpack('Crecord_id/vrecord_length/Cslot_records', $this->data);
         $this->data = substr($this->data, 4);
         $this->game = array_merge($this->game, $temp);
         $slot_records = $temp['slot_records'];
-
         // 4.11 [SlotRecord]
         for ($i=0; $i<$slot_records; $i++) {
             if ($this->header['major_v'] >= 7) {
@@ -312,6 +331,7 @@ class replay
         if ($temp['start_spots'] != 0xCC) { // tournament replays from battle.net website don't have this info
             $this->game['start_spots'] = $temp['start_spots'];
         }
+  
     }
 
     // 5.0 [ReplayData]
@@ -322,7 +342,6 @@ class replay
         while ($data_left > $this->max_datablock) {
             $prev = $block_id;
             $block_id = ord($this->data{0});
-
             switch ($block_id) {
                 // TimeSlot block
                 case 0x1E:
@@ -440,7 +459,8 @@ class replay
                     break;
                 case 0:
                     $data_left = 0;
-                    break;
+                    break;               
+    
                 default:
                     exit('Unhandled replay command block at '.convert_time($this->time).': 0x'.sprintf('%02X', $block_id).' (prev: 0x'.sprintf('%02X', $prev).', time: '.$this->time.') in '.$this->filename);
             }
@@ -1061,7 +1081,12 @@ class replay
                     case 0x75:
                         $n+=2;
                         break;
-
+                    case 0x7B:
+                        $n+=16;                          
+                        break;
+                    case 0x7A:
+                        $n+=20;                          
+                        break;                        
                     default:
                         $temp = '';
                         for ($i=3; $i<$n; $i++) { // first 3 bytes are player ID and length
