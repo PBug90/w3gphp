@@ -5,6 +5,9 @@ Based on the W3G-Parser for PHP created by Julas: http://w3rep.sourceforge.net/
 
 This library should be fully compatible with existing versions, only enhancing its functionality. It adds another property called "json_parsed_full" to the PHP class object that allows retrieval of well-defined data structures.
 
+### Supported PHP Versions
+The automated test pipeline comes 7.1, 7.2 and 7.3. Support for older versions is not guaranteed.
+
 
 #### Normalized JSON data structures
 Can be accessed by using the json_parsed_full property of the Replay object. Currently still work in progress and not 100% reliable yet.

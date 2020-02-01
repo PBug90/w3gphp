@@ -1,48 +1,68 @@
 <?php
-declare(strict_types=1);
-error_reporting(E_ERROR );
-require ( __DIR__ . "/../../vendor/autoload.php" );
-require(__DIR__ . "/../ReplayParser.php");
-
+declare (strict_types = 1);
+error_reporting(E_ERROR);
+require __DIR__ . "/../../vendor/autoload.php";
+require __DIR__ . "/../ReplayParser.php";
 
 use PHPUnit\Framework\TestCase;
-
 
 class ReplayParserTest extends TestCase
 {
 
-  public function testCaseProvider()
-      {
-        $files = [];
-        foreach(array_diff(scandir(__DIR__ . "/replays"),array("..",".")) as $key => $file){
-          $files[] = [__DIR__ . "/replays/".$file];
-        }
-          // parse your data file however you want
-          return  $files;
-      }
-
-
-      /**
-      * @dataProvider testCaseProvider
-      */
-  public function testReturnedObject($filepath)
+  public function testReforged_1()
   {
-      $parser = new ReplayParser();
-      $data = json_decode(json_encode($parser->parseReplayFile($filepath)));
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged1.w3g");
+    $this->assertEquals($data["version"], 10032);
+  }
 
-      $this->assertObjectHasAttribute ('map', $data);
-      $this->assertObjectHasAttribute ('randomSeed', $data);
-      $this->assertObjectHasAttribute ('mapLong', $data);
-      $this->assertObjectHasAttribute ('gameName', $data);
-      $this->assertObjectHasAttribute ('host', $data);
-      $this->assertObjectHasAttribute ('filesize', $data);
-      $this->assertObjectHasAttribute ('gameLength', $data);
-      $this->assertObjectHasAttribute ('version', $data);
-      $this->assertObjectHasAttribute ('nwgOffset', $data);
-      $this->assertObjectHasAttribute ('teams', $data);
-      $this->assertObjectHasAttribute ('observers', $data);
-      $this->assertObjectHasAttribute ('chat',$data);
-      $this->assertObjectHasAttribute ('w3gplus',$data);
+  public function testReforged_2()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged2.w3g");
+    $this->assertEquals($data["version"], 10032);
+  }
+
+  public function testReforged_3()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged3.w3g");
+    $this->assertEquals($data["version"], 10032);
+  }
+
+  public function testReforged_4()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged4.w3g");
+    $this->assertEquals($data["version"], 10032);
+  }
+
+  public function testClassic_1()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/1.w3g");
+    $this->assertEquals($data["version"], 26);
+  }
+
+  public function testClassic_2()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/2.w3g");
+    $this->assertEquals($data["version"], 26);
+  }
+
+  public function testClassic_3()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/3.w3g");
+    $this->assertEquals($data["version"], 26);
+  }
+
+  public function testClassic_4()
+  {
+    $parser = new ReplayParser();
+    $data   = $parser->parseReplayFile(__DIR__ . "/replays/4.w3g");
+    $this->assertEquals($data["version"], 26);
   }
 
 }
