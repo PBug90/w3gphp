@@ -131,7 +131,11 @@ class replay
         $blocks_count = $this->header['blocks'];
         for ($i=0; $i<$blocks_count; $i++) {
             // 3.0 [Data block header]
-            $block_header = @unpack('vc_size/vu_unknown/vu_size/Vchecksum/vu_unknown2', fread($this->fp, 12));
+            if ($this->header['build_v'] <= 6091){
+                $block_header = @unpack('vc_size/vu_size/Vchecksum', fread($this->fp, 8));
+            } else {
+                $block_header = @unpack('vc_size/vu_unknown/vu_size/Vchecksum/vu_unknown2', fread($this->fp, 12));
+            }
             $temp = fread($this->fp, $block_header['c_size']);
             $temp = substr($temp, 2, -4);
             // the first bit must be always set, but already set in replays with modified chatlog (why?)
@@ -267,26 +271,28 @@ class replay
             $this->data = substr($this->data, 4);
         }
   
-        $this->data = substr($this->data, 12); 
-        // 4.9 [extra player list]
-        do{
-            $this->data = substr($this->data, 5); 
-            $temp = unpack('cname_length', $this->data);
-            $this->data = substr($this->data,1);
-            
-            $this->data = substr($this->data, $temp["name_length"]+1);
-            
-            $temp = unpack('cclan_length', $this->data);
-            $this->data = substr($this->data,1);
-            
-            $this->data = substr($this->data, $temp["clan_length"]+1);
+        
+        if ($this->header['build_v'] > 6091){
+            // 4.9 [extra player list]
+            $this->data = substr($this->data, 12); 
+            do{
+                $this->data = substr($this->data, 5); 
+                $temp = unpack('cname_length', $this->data);
+                $this->data = substr($this->data,1);
+                
+                $this->data = substr($this->data, $temp["name_length"]+1);
+                
+                $temp = unpack('cclan_length', $this->data);
+                $this->data = substr($this->data,1);
+                
+                $this->data = substr($this->data, $temp["clan_length"]+1);
 
-            $temp = unpack('cextra_length', $this->data);
-            $this->data = substr($this->data,$temp['extra_length']+1);
-            $this->data = substr($this->data,4);
-            
-        }while (ord($this->data{0}) != 0x19);
-
+                $temp = unpack('cextra_length', $this->data);
+                $this->data = substr($this->data,$temp['extra_length']+1);
+                $this->data = substr($this->data,4);
+                
+            }while (ord($this->data{0}) != 0x19);
+        }
       
         // 4.10 [GameStartRecord]
         $temp = unpack('Crecord_id/vrecord_length/Cslot_records', $this->data);
