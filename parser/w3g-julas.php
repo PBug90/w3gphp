@@ -131,7 +131,7 @@ class replay
         $blocks_count = $this->header['blocks'];
         for ($i=0; $i<$blocks_count; $i++) {
             // 3.0 [Data block header]
-            if ($this->header['build_v'] < 6089){
+            if ($this->header['build_v'] < 6089) {
                 $block_header = @unpack('vc_size/vu_size/Vchecksum', fread($this->fp, 8));
             } else {
                 $block_header = @unpack('vc_size/vu_unknown/vu_size/Vchecksum/vu_unknown2', fread($this->fp, 12));
@@ -190,10 +190,10 @@ class replay
             $this->data = substr($this->data, 8);
             $this->players[$player_id]['exe_runtime'] = $temp['runtime'];
             $this->players[$player_id]['race'] = convert_race($temp['race']);
-        } else if (ord($this->data{0}) == 2) { // necessary since netease 1.29.1
-			$this->data = substr($this->data, 3);
-		} else if (ord($this->data{0}) == 0){
-            $this->data = substr($this->data,1);
+        } elseif (ord($this->data{0}) == 2) { // necessary since netease 1.29.1
+            $this->data = substr($this->data, 3);
+        } elseif (ord($this->data{0}) == 0) {
+            $this->data = substr($this->data, 1);
         }
         if ($this->parse_actions) {
             $this->players[$player_id]['actions'] = 0;
@@ -272,26 +272,25 @@ class replay
         }
   
         
-        if ($this->header['build_v'] > 6091){
+        if ($this->header['build_v'] > 6091) {
             // 4.9 [extra player list]
-            $this->data = substr($this->data, 12); 
-            do{
-                $this->data = substr($this->data, 5); 
+            $this->data = substr($this->data, 12);
+            do {
+                $this->data = substr($this->data, 5);
                 $temp = unpack('cname_length', $this->data);
-                $this->data = substr($this->data,1);
+                $this->data = substr($this->data, 1);
                 
                 $this->data = substr($this->data, $temp["name_length"]+1);
                 
                 $temp = unpack('cclan_length', $this->data);
-                $this->data = substr($this->data,1);
+                $this->data = substr($this->data, 1);
                 
                 $this->data = substr($this->data, $temp["clan_length"]+1);
 
                 $temp = unpack('cextra_length', $this->data);
-                $this->data = substr($this->data,$temp['extra_length']+1);
-                $this->data = substr($this->data,$this->header['build_v'] >= 6103 ? 4 : 2);
-                
-            }while (ord($this->data{0}) != 0x19);
+                $this->data = substr($this->data, $temp['extra_length']+1);
+                $this->data = substr($this->data, $this->header['build_v'] >= 6103 ? 4 : 2);
+            } while (ord($this->data{0}) != 0x19);
         }
       
         // 4.10 [GameStartRecord]
@@ -337,7 +336,6 @@ class replay
         if ($temp['start_spots'] != 0xCC) { // tournament replays from battle.net website don't have this info
             $this->game['start_spots'] = $temp['start_spots'];
         }
-  
     }
 
     // 5.0 [ReplayData]
@@ -465,7 +463,7 @@ class replay
                     break;
                 case 0:
                     $data_left = 0;
-                    break;               
+                    break;
     
                 default:
                     exit('Unhandled replay command block at '.convert_time($this->time).': 0x'.sprintf('%02X', $block_id).' (prev: 0x'.sprintf('%02X', $prev).', time: '.$this->time.') in '.$this->filename);
@@ -1088,11 +1086,11 @@ class replay
                         $n+=2;
                         break;
                     case 0x7B:
-                        $n+=16;                          
+                        $n+=16;
                         break;
                     case 0x7A:
-                        $n+=20;                          
-                        break;                        
+                        $n+=20;
+                        break;
                     default:
                         $temp = '';
                         for ($i=3; $i<$n; $i++) { // first 3 bytes are player ID and length
