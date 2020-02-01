@@ -131,7 +131,7 @@ class replay
         $blocks_count = $this->header['blocks'];
         for ($i=0; $i<$blocks_count; $i++) {
             // 3.0 [Data block header]
-            if ($this->header['build_v'] <= 6091){
+            if ($this->header['build_v'] < 6089){
                 $block_header = @unpack('vc_size/vu_size/Vchecksum', fread($this->fp, 8));
             } else {
                 $block_header = @unpack('vc_size/vu_unknown/vu_size/Vchecksum/vu_unknown2', fread($this->fp, 12));
@@ -289,7 +289,7 @@ class replay
 
                 $temp = unpack('cextra_length', $this->data);
                 $this->data = substr($this->data,$temp['extra_length']+1);
-                $this->data = substr($this->data,4);
+                $this->data = substr($this->data,$this->header['build_v'] >= 6103 ? 4 : 2);
                 
             }while (ord($this->data{0}) != 0x19);
         }
