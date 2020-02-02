@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare (strict_types = 1);
 error_reporting(E_ERROR);
 require __DIR__ . "/../../vendor/autoload.php";
 require __DIR__ . "/../ReplayParser.php";
@@ -12,28 +12,64 @@ class ReplayParserTest extends TestCase
     {
         $parser = new ReplayParser();
         $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged1.w3g");
-        $this->assertEquals($data["version"], 10032);
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("soveliss#1418", $data["teams"][0][0]['name']);
+        $this->assertEquals("human", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Paladin", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("anXieTy#2932", $data["teams"][1][0]['name']);
+        $this->assertEquals("human", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Mountain King", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
     public function testReforged_2()
     {
         $parser = new ReplayParser();
         $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged2.w3g");
-        $this->assertEquals($data["version"], 10032);
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("Sindroxa#1176", $data["teams"][0][0]['name']);
+        $this->assertEquals("orc", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Far Seer", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("Naileth#2901", $data["teams"][1][0]['name']);
+        $this->assertEquals("orc", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Tauren Chieftain", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Shadow Hunter", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
     public function testReforged_3()
     {
         $parser = new ReplayParser();
         $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged3.w3g");
-        $this->assertEquals($data["version"], 10032);
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("anXieTy#2932", $data["teams"][0][0]['name']);
+        $this->assertEquals("human", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("IroNSoul#22724", $data["teams"][1][0]['name']);
+        $this->assertEquals("undead", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Death Knight", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Lich", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
     public function testReforged_4()
     {
         $parser = new ReplayParser();
         $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged4.w3g");
-        $this->assertEquals($data["version"], 10032);
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("BEARAND#1604", $data["teams"][0][0]['name']);
+        $this->assertEquals("human", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("Taro#1112", $data["teams"][1][0]['name']);
+        $this->assertEquals("human", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Paladin", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
     public function testClassic_1()
