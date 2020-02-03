@@ -72,6 +72,22 @@ class ReplayParserTest extends TestCase
         $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
+    public function testReforged_5()
+    {
+        $parser = new ReplayParser();
+        $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged5.w3g");
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("pischner#2950", $data["teams"][0][0]['name']);
+        $this->assertEquals("nightelf", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Keeper of the Grove", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("Wartoni#2638", $data["teams"][1][0]['name']);
+        $this->assertEquals("undead", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Death Knight", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Lich", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
+    }
+
     public function testClassic_1()
     {
         $parser = new ReplayParser();

@@ -211,8 +211,15 @@ class replay
         for ($i=0; $this->data{$i}!=chr(0); $i++) {
             $this->game['name'] .= $this->data{$i};
         }
-        $this->data = substr($this->data, $i+2); // 0-byte ending the string + 1 unknown byte
- 
+        $this->data = substr($this->data, $i+1); // 0-byte ending the string + 1 unknown byte
+
+        //unknown byte can be a null-terminated string, for example hunter2
+        $this->game['privateString'] = '';
+        for ($i=0; $this->data{$i}!=chr(0); $i++) {
+            $this->game['privateString'] .= $this->data{$i};
+        }
+        $this->data = substr($this->data, $i+1);
+        
         // 4.3 [Encoded String]
         $temp = '';
 
