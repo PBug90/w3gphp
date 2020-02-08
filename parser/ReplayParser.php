@@ -296,9 +296,9 @@ class ReplayParser
 
 
 
-    public function parseReplayFile($filepath)
+    public function parseReplayFile($filepath, $platform="battlenet")
     {
-        $replay_parsed = new replay($filepath, true, true);
+        $replay_parsed = new replay($filepath, true, true, $platform);
         $return = array();
         $return["map"] = $this::normalizeMap($replay_parsed->game['map']);
         $return["randomSeed"] = $replay_parsed->game["random_seed"];

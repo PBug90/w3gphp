@@ -51,7 +51,7 @@ class replay
     public $max_datablock = MAX_DATABLOCK;
     public $read_offset = 0;
 
-    public function replay($filename, $parse_actions=true, $parse_chat=true)
+    public function replay($filename, $parse_actions=true, $parse_chat=true, $platform = "battlenet")
     {
         $this->parse_actions = $parse_actions;
         $this->parse_chat = $parse_chat;
@@ -61,6 +61,7 @@ class replay
         $this->apmCurrentTimeFrame = 0;
         $this->apmTimeIndex = 0;
         $this->apmTimeSampleInterval = 10000;
+        $this->platform = $platform;
 
         if (!$this->fp = fopen($filename, 'rb')) {
             exit(1);
@@ -279,7 +280,7 @@ class replay
         }
   
         
-        if ($this->header['build_v'] > 6091) {
+        if ($this->header['build_v'] > 6091 && $this->platform == "battlenet") {
             // 4.9 [extra player list]
             $this->data = substr($this->data, 12);
             do {
