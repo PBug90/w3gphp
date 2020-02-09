@@ -115,4 +115,20 @@ class ReplayParserTest extends TestCase
         $data   = $parser->parseReplayFile(__DIR__ . "/replays/4.w3g");
         $this->assertEquals($data["version"], 26);
     }
+
+    public function testNetease_132()
+    {
+        $parser = new ReplayParser();
+        $data   = $parser->parseReplayFile(__DIR__ . "/replays/netease_132.nwg","netease");
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("HurricaneBo", $data["teams"][0][0]['name']);
+        $this->assertEquals("nightelf", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Demon Hunter", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("SimplyHunteR", $data["teams"][1][0]['name']);
+        $this->assertEquals("nightelf", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Demon Hunter", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Naga Sea Witch", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
+    }
 }
