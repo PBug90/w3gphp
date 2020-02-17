@@ -288,6 +288,14 @@ class replay
                 $temp = unpack('cname_length', $this->data);
                 $this->data = substr($this->data, 1);
                 
+              	$playerName = substr($this->data, 0, $temp["name_length"]);
+                foreach($this->players as $key=>$player) {
+                    if(substr($playerName, 0, strlen($player['name'])) == $player['name']) {
+                        $this->players[$key]['name'] = $playerName;
+                        break;
+                    }
+                }
+              
                 $this->data = substr($this->data, $temp["name_length"]+1);
                 
                 $temp = unpack('cclan_length', $this->data);
