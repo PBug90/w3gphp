@@ -88,6 +88,39 @@ class ReplayParserTest extends TestCase
         $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
     }
 
+    public function testReforged_6()
+    {
+        $parser = new ReplayParser();
+        $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged6.w3g");
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("MisterWinner#21927", $data["teams"][0][0]['name']);
+        $this->assertEquals("human", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("Unique#22912", $data["teams"][1][0]['name']);
+        $this->assertEquals("human", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Archmage", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Pandaren Brewmaster", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
+    }
+
+    public function testReforged_7()
+    {
+        $parser = new ReplayParser();
+        $data   = $parser->parseReplayFile(__DIR__ . "/replays/reforged7.w3g");
+        $this->assertEquals(10032, $data["version"]);
+        $this->assertEquals("WaN#1734", $data["teams"][0][0]['name']);
+        $this->assertEquals("undead", $data["teams"][0][0]['raceDetected']);
+        $this->assertEquals("Death Knight", $data["teams"][0][0]['heroes'][0]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][0][0]['units']['summary']));
+        $this->assertEquals("РозовыйПони#228941", $data["teams"][1][0]['name']);
+        $this->assertEquals("undead", $data["teams"][1][0]['raceDetected']);
+        $this->assertEquals("Death Knight", $data["teams"][1][0]['heroes'][0]['name']);
+        $this->assertEquals("Pit Lord", $data["teams"][1][0]['heroes'][1]['name']);
+        $this->assertGreaterThan(0, count($data["teams"][1][0]['units']['summary']));
+    }
+
+
     public function testClassic_1()
     {
         $parser = new ReplayParser();
