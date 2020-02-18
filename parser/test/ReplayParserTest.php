@@ -1,5 +1,5 @@
 <?php
-declare (strict_types = 1);
+declare(strict_types = 1);
 error_reporting(E_ERROR);
 require __DIR__ . "/../../vendor/autoload.php";
 require __DIR__ . "/../ReplayParser.php";
@@ -152,7 +152,7 @@ class ReplayParserTest extends TestCase
     public function testNetease_132()
     {
         $parser = new ReplayParser();
-        $data   = $parser->parseReplayFile(__DIR__ . "/replays/netease_132.nwg","netease");
+        $data   = $parser->parseReplayFile(__DIR__ . "/replays/netease_132.nwg", "netease");
         $this->assertEquals(10032, $data["version"]);
         $this->assertEquals("HurricaneBo", $data["teams"][0][0]['name']);
         $this->assertEquals("nightelf", $data["teams"][0][0]['raceDetected']);
